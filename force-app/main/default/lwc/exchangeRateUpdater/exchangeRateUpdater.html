@@ -1,0 +1,17 @@
+<template>
+  <div>
+      <h1>Crypto Rates</h1>
+      <template if:true={cryptoRates}>
+          <ul>
+              <template for:each={cryptoRates} for:item="crypto">
+                  <li key={crypto.name}>
+                      {crypto.name}: {crypto.rate} {crypto.currency}
+                  </li>
+              </template>
+          </ul>
+      </template>
+      <template if:false={cryptoRates}>
+          <p>Loading...</p>
+      </template>
+  </div>
+</template>
