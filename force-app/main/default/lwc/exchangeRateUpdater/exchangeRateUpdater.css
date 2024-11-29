@@ -1,0 +1,30 @@
+.exchange-rates {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.crypto-rate {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 10px;
+  font-size: 16px;
+}
+
+.currency-name {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.currency-value {
+  color: #333333;
+  margin-right: 5px;
+}
+
+.currency-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 8px; 
+}

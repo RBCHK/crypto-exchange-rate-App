@@ -1,40 +1,39 @@
 public class CryptoExchangeRate {
-  public class CryptoRates {
-      public Decimal bitcoin;
-      public Decimal ethereum;
-      public Decimal tether;
-      public Decimal litecoin;
-  }
-
   @AuraEnabled(cacheable=true)
-  public static CryptoRates getCryptoRates() {
+  public static Map<String, Decimal> getCryptoRates() {
+      
       String url = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tether,litecoin&vs_currencies=usd';
       
-      // Создаем HTTP запрос
       HttpRequest req = new HttpRequest();
       req.setEndpoint(url);
       req.setMethod('GET');
+      req.setHeader('Content-Type', 'application/json');
       
-      // Отправляем запрос и получаем ответ
       Http http = new Http();
       HttpResponse res = http.send(req);
       
-      CryptoRates rates = new CryptoRates();
-      
-      // Если запрос успешен, обрабатываем данные
       if (res.getStatusCode() == 200) {
-          // Десериализуем JSON ответ в объект
-          Map<String, Map<String, Decimal>> responseMap = (Map<String, Map<String, Decimal>>) JSON.deserializeUntyped(res.getBody());
+          String responseBody = res.getBody();
           
-          // Получаем курсы валют из объекта
-          rates.bitcoin = responseMap.get('bitcoin').get('usd');
-          rates.ethereum = responseMap.get('ethereum').get('usd');
-          rates.tether = responseMap.get('tether').get('usd');
-          rates.litecoin = responseMap.get('litecoin').get('usd');
+          Map<String, Object> data = (Map<String, Object>) JSON.deserializeUntyped(responseBody);
+          Map<String, Decimal> rates = new Map<String, Decimal>();
+          
+          if (data.containsKey('bitcoin')) {
+              rates.put('Bitcoin', (Decimal)((Map<String, Object>)data.get('bitcoin')).get('usd'));
+          }
+          if (data.containsKey('ethereum')) {
+              rates.put('Ethereum', (Decimal)((Map<String, Object>)data.get('ethereum')).get('usd'));
+          }
+          if (data.containsKey('tether')) {
+              rates.put('Tether', (Decimal)((Map<String, Object>)data.get('tether')).get('usd'));
+          }
+          if (data.containsKey('litecoin')) {
+              rates.put('Litecoin', (Decimal)((Map<String, Object>)data.get('litecoin')).get('usd'));
+          }
+          
+          return rates;
       } else {
-          System.debug('Error: ' + res.getStatusCode());
+          throw new AuraHandledException('Error fetching data: ' + res.getStatus());
       }
-      
-      return rates;
   }
 }

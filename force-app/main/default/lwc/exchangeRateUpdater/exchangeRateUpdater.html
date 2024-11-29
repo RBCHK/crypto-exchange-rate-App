@@ -1,17 +1,32 @@
 <template>
-  <div>
-      <h1>Crypto Rates</h1>
-      <template if:true={cryptoRates}>
-          <ul>
-              <template for:each={cryptoRates} for:item="crypto">
-                  <li key={crypto.name}>
-                      {crypto.name}: {crypto.rate} {crypto.currency}
-                  </li>
-              </template>
-          </ul>
+  <lightning-card title="Crypto Exchange Rates" icon-name="standard:connect_wallet">
+      <template if:true={rates}>
+        <div class="slds-p-horizontal_medium">
+          <div class="exchange-rates">
+              <div class="crypto-rate">
+                <img src={bitcoinIconUrl} class="currency-icon" alt="Bitcoin" />
+                <span class="currency-name">Bitcoin:</span><span class="currency-value">{rates.Bitcoin}</span><div class="currency-value">USD</div>
+              </div>
+              <div class="crypto-rate">
+                <img src={tetherIconUrl} class="currency-icon" alt="Tether" />
+                <span class="currency-name">Tether:</span><span class="currency-value">{rates.Tether}</span><span class="currency-value">USD</span>
+              </div>
+              <div class="crypto-rate">
+                <img src={ethereumIconUrl} class="currency-icon" alt="Ethereum" />
+                <span class="currency-name">Ethereum:</span><span class="currency-value">{rates.Ethereum}</span><span class="currency-value">USD</span>
+              </div>
+              <div class="crypto-rate">
+                <img src={litecoinIconUrl} class="currency-icon" alt="Litecoin" />
+                <span class="currency-name">Litecoin:</span><span class="currency-value">{rates.Litecoin}</span><span class="currency-value">USD</span>
+              </div>
+          </div>
+        </div>
+        <lightning-button variant="brand-outline" label="Update Latest Exchange Rates" title="Primary action with lighter look" onclick={handleClick} class="slds-m-left_x-small slds-m-vertical_medium slds-align_absolute-center"></lightning-button>
       </template>
-      <template if:false={cryptoRates}>
-          <p>Loading...</p>
+      <template if:true={error}>
+          <div class="slds-box slds-box_xx-small slds-text-align_center slds-text-color_error">
+              <p>{error}</p>
+          </div>
       </template>
-  </div>
+  </lightning-card>
 </template>
