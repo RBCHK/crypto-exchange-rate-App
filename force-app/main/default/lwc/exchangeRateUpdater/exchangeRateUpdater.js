@@ -8,26 +8,24 @@ import tetherIcon from '@salesforce/resourceUrl/tetherIcon';
 
 export default class ExchangeRateUpdater extends LightningElement {
   bitcoinIconUrl = bitcoinIcon;
-  ethereumIconUrl = ethereumIcon
-  tetherIconUrl = tetherIcon
-  litecoinIconUrl = litecoinIcon
+  ethereumIconUrl = ethereumIcon;
+  tetherIconUrl = tetherIcon;
+  litecoinIconUrl = litecoinIcon;
   
-  @track rates = {};
-  @track error;
+  // @track is used to track changes in the object/array for reactivity, 
+  // required for compatibility with LWC versions before 45.
+  @track rates = null;
+  @track errorMessage = null;
 
-  connectedCallback() {
-    this.fetchCryptoRates();
-  }
-
-  fetchCryptoRates() {
+  updateCryptoRates() {
     getCryptoRates()
-      .then(result => {
-        this.rates = result;
-        this.error = undefined;
-      })
-      .catch(error => {
-        this.error = 'Error fetching data: ' + error.body.message;
-        this.rates = {};
-      });
+    //.then(result => {
+    //    this.rates = result;
+    //    this.errorMessage = null;
+    //  })
+    //  .catch(error => {
+    //    this.errorMessage = 'Error fetching exchange rates. Please try again later.';
+    //    console.error('Error fetching exchange rates:', error);
+    //  });
   }
 }

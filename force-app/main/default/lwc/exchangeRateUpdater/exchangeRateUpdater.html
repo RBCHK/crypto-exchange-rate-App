@@ -1,5 +1,13 @@
 <template>
   <lightning-card title="Crypto Exchange Rates" icon-name="standard:connect_wallet">
+    <lightning-button
+          variant="brand-outline" 
+          label="Update Latest Exchange Rates" 
+          title="Primary action with lighter look" 
+          onclick={updateCryptoRates} 
+          class="slds-m-left_x-small slds-m-vertical_medium slds-align_absolute-center"
+          >
+        </lightning-button>
       <template if:true={rates}>
         <div class="slds-p-horizontal_medium">
           <div class="exchange-rates">
@@ -21,11 +29,10 @@
               </div>
           </div>
         </div>
-        <lightning-button variant="brand-outline" label="Update Latest Exchange Rates" title="Primary action with lighter look" onclick={handleClick} class="slds-m-left_x-small slds-m-vertical_medium slds-align_absolute-center"></lightning-button>
       </template>
-      <template if:true={error}>
-          <div class="slds-box slds-box_xx-small slds-text-align_center slds-text-color_error">
-              <p>{error}</p>
+      <template if:true={errorMessage}>
+          <div class="slds-box_xx-small slds-text-align_center slds-text-color_error">
+              <p>{errorMessage}</p>
           </div>
       </template>
   </lightning-card>
