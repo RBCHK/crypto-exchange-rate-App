@@ -17,14 +17,14 @@ public with sharing class CryptoExchangeRate {
     
     if (res.getStatusCode() == 200) {
       Map<String, Object> result = (Map<String, Object>)JSON.deserializeUntyped(res.getBody());
-      List<Current_Exchange_Rates__c> currentRatesToUpsert = new List<Current_Exchange_Rates__c>();
+      List<Current_Exchange_Rates__c> currentRatesToInsert = new List<Current_Exchange_Rates__c>();
       List<Historical_Exchange_Rates__c> historicalRatesToInsert = new List<Historical_Exchange_Rates__c>();
 
       for (String cryptoName : result.KeySet()) {
         Map<String, Object> cryptoData = (Map<String, Object>)result.get(cryptoName);
         Decimal cryptoRate = (Decimal)cryptoData.get(currencyCode);
 
-        currentRatesToUpsert.add(new Current_Exchange_Rates__c(
+        currentRatesToInsert.add(new Current_Exchange_Rates__c(
           Name = cryptoName,
           Current_Exchange_Rate__c = cryptoRate,
           Last_Updated__c = System.Now()
@@ -37,9 +37,10 @@ public with sharing class CryptoExchangeRate {
         ));
       }
 
-      if(!currentRatesToUpsert.isEmpty()){
+      if(!currentRatesToInsert.isEmpty()){
         try {
-          upsert currentRatesToUpsert Name;
+          delete [SELECT Id FROM Current_Exchange_Rates__c];
+          insert currentRatesToInsert;
         } catch (DmlException e) {
           System.debug('Error upserting current rates: ' + e.getMessage());
           throw new AuraHandledException('Error while upserting current exchange rates. Please contact your administrator: ' + res.getStatus());
