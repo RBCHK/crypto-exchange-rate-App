@@ -3,12 +3,18 @@ import { LightningElement, wire } from 'lwc';
 import { refreshApex } from '@salesforce/apex';
 import getCryptoRates from '@salesforce/apex/CryptoExchangeRate.getCryptoRates';
 import getCurrentRates from '@salesforce/apex/CryptoRatesController.getCurrentRates';
+
 import bitcoinIcon from '@salesforce/resourceUrl/bitcoinIcon';
+import defaultLogo from '@salesforce/resourceUrl/default_logo';
 import litecoinIcon from '@salesforce/resourceUrl/litecoinIcon';
 
 export default class ExchangeRateUpdater extends LightningElement {
-  bitcoin = bitcoinIcon;
-  litecoin = litecoinIcon;
+  icons = {
+    default: defaultLogo,
+    bitcoin: bitcoinIcon,
+    litecoin: litecoinIcon
+  };
+  
   currentRates = [];
   wiredRates = [];
   errorMessage = null;
@@ -28,7 +34,8 @@ export default class ExchangeRateUpdater extends LightningElement {
     if (data) {
       this.currentRates = data.map(obj => ({
         ...obj,
-        name: this.capitalizeWord(obj.name)
+        name: this.capitalizeWord(obj.name),
+        icon: this.icons[obj.name] || defaultLogo
       }));
       this.errorMessage = null;
     } else if (error) {
