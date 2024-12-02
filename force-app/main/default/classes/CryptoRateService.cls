@@ -1,6 +1,6 @@
 public with sharing class CryptoRateService {
 
-  // Method to apply the exchange rate to opportunities based on the selected cryptocurrency
+  // to apply the exchange rate to opportunities based on the selected cryptocurrency
   public static void applyCryptoExchangeRate(List<Opportunity> opportunities) {
     List<Map<String, Object>> currentRates = CryptoRatesController.getCurrentRates();
 
@@ -22,7 +22,7 @@ public with sharing class CryptoRateService {
     }
   }
 
-  ///method to automatically update AmountInCrypto__c in open Opportunities when the exchange rate changes
+  //updates AmountInCrypto__c in open Opportunities when the exchange rate changes
   public static void updateOpportunitiesWithNewRate() {
     List<Map<String, Object>> currentRates = CryptoRatesController.getCurrentRates();
 

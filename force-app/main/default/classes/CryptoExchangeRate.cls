@@ -68,7 +68,7 @@ public with sharing class CryptoExchangeRate {
         SELECT MasterLabel, API_URL__c 
         FROM API_Config__mdt 
         WHERE DeveloperName = 'CoinGecko'
-      ];
+    ];
     
     if (configRecords.isEmpty()) {
       throw new AuraHandledException('API Config not found');
