@@ -1,9 +1,10 @@
 public with sharing class CryptoRatesController {
   
+  // Method to get the current exchange rates from the Current_Exchange_Rates__c object
   @AuraEnabled(cacheable=true)
   public static List<Map<String, Object>> getCurrentRates() {
     List<Map<String, Object>> result = new List<Map<String, Object>>();
-
+    
     List<Current_Exchange_Rates__c> currentRates = [
       SELECT CreatedById, Name, Current_Exchange_Rate__c, Last_Updated__c
       FROM Current_Exchange_Rates__c
