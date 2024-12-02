@@ -21,4 +21,26 @@ public with sharing class CryptoRateService {
       }
     }
   }
+
+  ///method to automatically update AmountInCrypto__c in open Opportunities when the exchange rate changes
+  public static void updateOpportunitiesWithNewRate() {
+    List<Map<String, Object>> currentRates = CryptoRatesController.getCurrentRates();
+
+    List<Opportunity> openOpportunities = [
+      SELECT Id, Amount, Cryptocurrency__c, Amount_In_Crypto__c
+      FROM Opportunity
+      WHERE StageName != 'Closed' AND Cryptocurrency__c != NULL
+    ];
+    
+    for (Opportunity opp : openOpportunities) {
+      for (Map<String, Object> rate : currentRates) {
+        if (rate.get('name') == opp.Cryptocurrency__c) {
+          Decimal cryptoRate = (Decimal) rate.get('rate');
+          opp.Amount_In_Crypto__c = opp.Amount / cryptoRate;
+        }
+      }
+    }
+    
+    update openOpportunities;
+  }
 }
