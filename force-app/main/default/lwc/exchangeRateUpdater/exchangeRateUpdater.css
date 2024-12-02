@@ -1,30 +1,40 @@
-.exchange-rates {
+.crypto-cards-container {
   display: flex;
-  justify-content: space-around;
-  align-items: center;
   flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
 }
 
-.crypto-rate {
+.crypto-card {
+  width: 350px;
+  background-color: #356fa9;
+  border-radius: 5px;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+  padding-bottom: 5px ;
+  margin: 18px;
+}
+
+.crypto-logo {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  padding-bottom: 10px;
+}
+
+.crypto-card h3 {
+  font-size: 1.5rem;
+  color: #121212;
+}
+
+.crypto-card h2 {
+  font-size: 1.5rem;
+  color: #242424;
+}
+
+.price {
   display: flex;
-  justify-content: space-around;
-  align-items: center;
-  margin: 10px;
-  font-size: 16px;
-}
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding-right: 25px;
 
-.currency-name {
-  font-weight: bold;
-  margin-right: 5px;
-}
-
-.currency-value {
-  color: #333333;
-  margin-right: 5px;
-}
-
-.currency-icon {
-  width: 24px;
-  height: 24px;
-  margin-right: 8px; 
 }

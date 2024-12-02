@@ -1,39 +1,45 @@
 <template>
-  <lightning-card title="Crypto Exchange Rates" icon-name="standard:connect_wallet">
+  <lightning-card title="Crypto Exchange Rates" icon-name="standard:connect_wallet"> 
+    <template if:true={currentRates.length}>
+      <div class="crypto-cards-container">
+        <template for:each={currentRates} for:item="rate">
+          <lightning-card key={rate.id} class="crypto-card">
+            <div class="slds-grid slds-grid_vertical-align-center slds-p-horizontal_small">
+              <div class="slds-col slds-size_1-of-4">
+                <img src={bitcoin} alt={rate.name} class="crypto-logo" />
+              </div>
+              <div class="slds-size_3-of-4 slds-m-bottom_small price">
+                <h3>{rate.name}:</h3>
+                <h2>${rate.rate}</h2>
+              </div>
+            </div>
+          </lightning-card>
+        </template>
+      </div>
+    </template>
+      <template if:false={currentRates.length}>
+      <div class="slds-text-align_center slds-text-color_default">
+        <p>No cryptocurrency exchange rates available. Please update the latest rates.</p>
+      </div>
+    </template>
+
     <lightning-button
-          variant="brand-outline" 
-          label="Update Latest Exchange Rates" 
-          title="Primary action with lighter look" 
-          onclick={updateCryptoRates} 
-          class="slds-m-left_x-small slds-m-vertical_medium slds-align_absolute-center"
-          >
-        </lightning-button>
-      <template if:true={rates}>
-        <div class="slds-p-horizontal_medium">
-          <div class="exchange-rates">
-              <div class="crypto-rate">
-                <img src={bitcoinIconUrl} class="currency-icon" alt="Bitcoin" />
-                <span class="currency-name">Bitcoin:</span><span class="currency-value">{rates.Bitcoin}</span><div class="currency-value">USD</div>
-              </div>
-              <div class="crypto-rate">
-                <img src={tetherIconUrl} class="currency-icon" alt="Tether" />
-                <span class="currency-name">Tether:</span><span class="currency-value">{rates.Tether}</span><span class="currency-value">USD</span>
-              </div>
-              <div class="crypto-rate">
-                <img src={ethereumIconUrl} class="currency-icon" alt="Ethereum" />
-                <span class="currency-name">Ethereum:</span><span class="currency-value">{rates.Ethereum}</span><span class="currency-value">USD</span>
-              </div>
-              <div class="crypto-rate">
-                <img src={litecoinIconUrl} class="currency-icon" alt="Litecoin" />
-                <span class="currency-name">Litecoin:</span><span class="currency-value">{rates.Litecoin}</span><span class="currency-value">USD</span>
-              </div>
-          </div>
-        </div>
-      </template>
-      <template if:true={errorMessage}>
-          <div class="slds-box_xx-small slds-text-align_center slds-text-color_error">
-              <p>{errorMessage}</p>
-          </div>
-      </template>
+      variant="brand-outline"
+      label="Update Latest Exchange Rates"
+      title="Update exchange rates"
+      onclick={updateCryptoRates}
+      class="slds-m-left_x-small slds-m-vertical_large slds-align_absolute-center"
+    >
+    </lightning-button>
+
+    <template if:true={isLoading}>
+      <lightning-spinner alternative-text="Loading"></lightning-spinner>
+    </template>
+
+    <template if:true={errorMessage}>
+      <div class="slds-box_xx-small slds-text-align_center slds-text-color_error">
+        <p>{errorMessage}</p>
+      </div>
+    </template>
   </lightning-card>
 </template>

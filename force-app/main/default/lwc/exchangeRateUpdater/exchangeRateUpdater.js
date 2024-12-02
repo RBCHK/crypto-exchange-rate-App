@@ -1,31 +1,51 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, wire } from 'lwc';
 
+import { refreshApex } from '@salesforce/apex';
 import getCryptoRates from '@salesforce/apex/CryptoExchangeRate.getCryptoRates';
+import getCurrentRates from '@salesforce/apex/CryptoRatesController.getCurrentRates';
 import bitcoinIcon from '@salesforce/resourceUrl/bitcoinIcon';
-import ethereumIcon from '@salesforce/resourceUrl/ethereumIcon';
 import litecoinIcon from '@salesforce/resourceUrl/litecoinIcon';
-import tetherIcon from '@salesforce/resourceUrl/tetherIcon';
 
 export default class ExchangeRateUpdater extends LightningElement {
-  bitcoinIconUrl = bitcoinIcon;
-  ethereumIconUrl = ethereumIcon;
-  tetherIconUrl = tetherIcon;
-  litecoinIconUrl = litecoinIcon;
-  
-  // @track is used to track changes in the object/array for reactivity, 
-  // required for compatibility with LWC versions before 45.
-  @track rates = null;
-  @track errorMessage = null;
+  bitcoin = bitcoinIcon;
+  litecoin = litecoinIcon;
+  currentRates = [];
+  wiredRates = [];
+  errorMessage = null;
+  isLoading = false;
 
-  updateCryptoRates() {
-    getCryptoRates()
-    //.then(result => {
-    //    this.rates = result;
-    //    this.errorMessage = null;
-    //  })
-    //  .catch(error => {
-    //    this.errorMessage = 'Error fetching exchange rates. Please try again later.';
-    //    console.error('Error fetching exchange rates:', error);
-    //  });
+  capitalizeWord(word) {
+    if (!word) return word;
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+  }
+
+  @wire(getCurrentRates)
+  wiredGetRates(value) {
+    this.wiredRates = value
+    
+    const { data, error } = value
+
+    if (data) {
+      this.currentRates = data.map(obj => ({
+        ...obj,
+        name: this.capitalizeWord(obj.name)
+      }));
+      this.errorMessage = null;
+    } else if (error) {
+      this.errorMessage = error.body ? error.body.message : 'An error occurred while fetching the exchange rates.';
+      this.currentRates = [];
+    }
+  }
+
+  async updateCryptoRates() {
+    this.isLoading = true;
+    try {
+      await getCryptoRates();
+      await refreshApex(this.wiredRates);
+    } catch (error) {
+      this.errorMessage = error.body ? error.body.message : 'An error occurred while updating the exchange rates.';
+    } finally {
+    this.isLoading = false;
+    }
   }
 }
